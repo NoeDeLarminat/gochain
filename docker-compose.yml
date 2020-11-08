@@ -1,0 +1,35 @@
+version: '3.3'
+
+networks:
+    app_network:
+
+services:
+  app_gochain:
+    image: app/app_gochain
+    container_name: app_gochain
+    build:
+     context: .
+     dockerfile: Dockerfile
+    environment:
+        IP: 0.0.0.0
+        PORT: 8000
+        POSTGRES_URL: db_url
+        POSTGRES_PASSWORD: db_pwd
+    ports:
+        - '8000:8000'
+    networks:
+        - app_network
+    depends_on: 
+        - "db"
+
+  db:
+    image: postgres
+    container_name: app_db
+    environment:
+        POSTGRES_DB: db_url
+        POSTGRES_PASSWORD: db_pwd
+    volumes:
+      - './mypostgresql/data:/var/lib/postgresql/data'    
+    networks:
+        - app_network
+    
